@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jellix</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="login-body">
+  <form id="login-form">
+    <div class="logo-container"><span class="jelli">Jelli</span><span class="x"></span></div>
+    <p>
+      <label for="username">Username:</label> <input type="text" id="username" name="username" required>
+    </p>
+    <p>
+      <label for="password">Password:</label> <input type="password" id="password" name="password" required>
+    </p>
+    <div id="login-form-buttons">
+      <button type="submit">Login</button>
+    </div>
+    <div id="error"></div> <!-- Error message display -->
+  </form>
+  <script src="/params.js"></script>
+  <script src="/auth.js"></script>
+  <script src="/login.js"></script>
+</body>
+</html>
