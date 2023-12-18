@@ -154,6 +154,9 @@ function createLists(movies) {
   lists.push({idx: i++, name: 'Latest movies', movies: latest.slice(0, settings.moviesSliderLimit)});
   let newest = filterList(movies.filter(x => x.PremiereDate).map(movie => movie.Id).sort((a, b) => new Date(allMovies[b].PremiereDate) - new Date(allMovies[a].PremiereDate)));
   lists.push({idx: i++, name: 'Newest movies', movies: newest.slice(0, settings.moviesSliderLimit)});
+  let favourites = filterList(movies.filter(x => x.UserData.IsFavorite).map(movie => movie.Id));
+  if (favourites.length)
+    lists.push({idx: i++, name: 'Favourites', movies: favourites.slice(0, settings.moviesSliderLimit)});
   let allGenres = [...new Set(movies.reduce((acc, movie) => acc.concat(movie.Genres), []))];
   let sortedGenres = sortArrayByAppearance(genresOrder, allGenres);
   sortedGenres.forEach(genre => {
