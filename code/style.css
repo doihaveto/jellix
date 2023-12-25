@@ -224,7 +224,6 @@ body.login-body {
   color: #000;
   padding: 2px 6px;
   border-radius: 3px;
-  font-size: 1rem;
   margin-left: 5px;
 }
 
@@ -453,4 +452,10 @@ body.login-body {
   height: 100%;
   background: rgb(0,0,0);
   background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4206057422969187) 15%, rgba(0,0,0,0) 28%);
+}
+
+@media screen and (width: 1920px) {
+  body .movie-info {
+    font-size: 1.5rem; /* Adjust the font size for 4K resolution */
+  }
 }
