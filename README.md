@@ -27,6 +27,7 @@ An example docker-compose file:
 ```
 version: '3.9'
 
+services:
   jellix:
     container_name: jellix
     build: ./jellix
