@@ -11,7 +11,8 @@ let settings = {
   filterYearMax: null,
   filterCommunityRatingsMin: 0,
   filterCriticRatingsMin: 0,
-  moviesSliderLimit: 30,
+  moviesSliderLimit: 60,
+  fontSize: 100,
 };
 const genresOrder = [
   'Drama',
@@ -50,6 +51,60 @@ if (localStorage.getItem('movieSettings')) {
 } else {
   localStorage.setItem('movieSettings', JSON.stringify(settings));
 }
+
+// CSS adjustments according to settings
+
+function getAllCustomProperties() {
+  const customProperties = [];
+  for (const styleSheet of document.styleSheets) {
+    try {
+      const rules = styleSheet.cssRules || styleSheet.rules;
+      for (const rule of rules) {
+        if (rule instanceof CSSStyleRule) {
+          const declaration = rule.style;
+          for (let i = 0; i < declaration.length; i++) {
+            const property = declaration[i];
+            if (property.startsWith('--') && !customProperties.includes(property)) {
+              customProperties.push(property);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error while reading CSS rules:', error);
+    }
+  }
+  return customProperties;
+}
+
+function getFontSizeProperties() {
+  let customProperties = getAllCustomProperties();
+  let fontSizeProperties = {};
+  customProperties.filter(property => property.startsWith('--jellix-') && property.endsWith('font-size')).forEach(property => {
+    let value = getComputedStyle(document.documentElement).getPropertyValue(property);
+    const match = value.match(/(\d+(\.\d+)?)(\S+)/);
+    fontSizeProperties[property] = {
+      value: parseFloat(match[1]),
+      unit: match[3]
+    };
+  });
+  return fontSizeProperties;
+}
+
+const fontSizeProperties = getFontSizeProperties();
+
+function changeFontSize(percent=null) {
+  if (percent === null)
+    percent = settings.fontSize;
+  Object.entries(fontSizeProperties).forEach(([property, size]) => {
+    // Calculate new font sizes
+    const newSize = size.value * (percent / 100);
+    // Update CSS custom properties with new font sizes
+    document.documentElement.style.setProperty(property, newSize + size.unit);
+  });
+}
+
+changeFontSize();
 
 const logoutButton = document.querySelector('#logout-button');
 logoutButton.addEventListener('click', logout);
@@ -113,7 +168,7 @@ async function getMovies() {
       throw new Error('Failed to find movies collection');
     itemsResponse = await fetch(`${API_URL}Users/${user.Id}/Items?` + new URLSearchParams({
       'ParentId': collectionId,
-      'fields': 'Genres,Tags,DateCreated,Overview', // OriginalTitle,Overview,ProductionLocations,ExternalUrls,DateLastMediaAdded,SortName
+      'fields': 'Genres,Tags,DateCreated,Overview', // OriginalTitle,ProductionLocations,ExternalUrls,DateLastMediaAdded,SortName
       'enableImages': true,
       'IncludeItemTypes': 'Movie',
       'Recursive': true,
@@ -384,6 +439,11 @@ function handleDownAction() {
   }
 }
 
+function handleEnterAction() {
+  const playElement = document.querySelector('.play-button');
+  playElement.click();
+}
+
 let canFire = true;
 
 function cooldown() {
@@ -416,6 +476,8 @@ document.addEventListener('keydown', (event) => {
       handleRightAction();
     } else if (event.key === 'ArrowLeft') {
       handleLeftAction();
+    } else if (event.key === 'Enter') {
+      handleEnterAction();
     }
     cooldown();
   }
@@ -424,6 +486,7 @@ document.addEventListener('keydown', (event) => {
 const settingsButton = document.getElementById('settings-button');
 const overlay = document.getElementById('overlay');
 const settingsSaveButton = document.querySelector('.settings-save');
+const fontSizeInput = document.querySelector('#setting-font-size');
 
 settingsButton.addEventListener('click', function() {
   overlay.classList.add('show');
@@ -431,6 +494,10 @@ settingsButton.addEventListener('click', function() {
 
 settingsSaveButton.addEventListener('click', function() {
   overlay.classList.remove('show');
+});
+
+fontSizeInput.addEventListener('change', () => {
+  changeFontSize(parseInt(fontSizeInput.value));
 });
 
 function saveSettings() {
@@ -444,6 +511,7 @@ function initializeSettings() {
   document.getElementById('filter-community-ratings-min').value = settings.filterCommunityRatingsMin;
   document.getElementById('filter-critic-ratings-min').value = settings.filterCriticRatingsMin;
   document.getElementById('setting-slider-limit').value = settings.moviesSliderLimit;
+  document.getElementById('setting-font-size').value = settings.fontSize;
   document.getElementById('indicator-unplayed-filter').style.display = settings.filterHidePlayed ? '' : 'none';
   if (settings.filterYearMin && settings.filterYearMin > 1900 || settings.filterYearMax) {
     let filterYearMin = settings.filterYearMin;
@@ -477,7 +545,8 @@ document.querySelector('.settings-save').addEventListener('click', function() {
   settings.filterYearMax = parseInt(document.getElementById('filter-year-max').value);
   settings.filterCommunityRatingsMin = parseFloat(document.getElementById('filter-community-ratings-min').value) || 0;
   settings.filterCriticRatingsMin = parseInt(document.getElementById('filter-critic-ratings-min').value) || 0;
-  settings.moviesSliderLimit = parseInt(document.getElementById('setting-slider-limit').value) || 30;
+  settings.moviesSliderLimit = parseInt(document.getElementById('setting-slider-limit').value) || 60;
+  settings.fontSize = parseInt(document.getElementById('setting-font-size').value) || 100;
   saveSettings();
   initializeSettings();
   showLoadingScreen();

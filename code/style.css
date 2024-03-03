@@ -1,3 +1,9 @@
+:root {
+  --jellix-movie-info-font-size: 1rem;
+  --jellix-movie-info-tv-font-size: 1.5rem;
+  --jellix-settings-font-size: 1rem;
+}
+
 @font-face {
   font-family: 'Noto Sans';
   src: url('/fonts/NotoSans-Regular.ttf') format('truetype');
@@ -200,7 +206,7 @@ body.login-body {
 
 .movie-info {
   align-items: center;
-  font-size: 1rem;
+  font-size: var(--jellix-movie-info-font-size);
   margin-bottom: 2vh;
   width: 40vw;
   padding: 1vh;
@@ -379,7 +385,7 @@ body.login-body {
   padding: 20px;
   border-radius: 5px;
   color: #dadada;
-  font-size: 1rem;
+  font-size: var(--jellix-settings-font-size);
 }
 
 .settings h3 {
@@ -395,7 +401,7 @@ body.login-body {
   background: none;
   border: 0;
   border-bottom: 1px solid white;
-  font-size: 1rem;
+  font-size: var(--jellix-settings-font-size);
   text-align: center;
 }
 
@@ -456,6 +462,6 @@ body.login-body {
 
 @media screen and (width: 1920px) {
   body .movie-info {
-    font-size: 1.5rem; /* Adjust the font size for 4K resolution */
+    font-size: var(--jellix-movie-info-tv-font-size); /* Adjust the font size for tv */
   }
 }
