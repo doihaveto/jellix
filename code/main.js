@@ -11,8 +11,10 @@ let settings = {
   filterYearMax: null,
   filterCommunityRatingsMin: 0,
   filterCriticRatingsMin: 0,
+  filterRuntimeMinutes: 0,
   moviesSliderLimit: 60,
   fontSize: 100,
+  showNav: false,
 };
 const genresOrder = [
   'Drama',
@@ -42,7 +44,7 @@ const genresOrder = [
   'Horror',
   'Talk-Show',
 ];
-const parentContainer = document.querySelector('.lists-container');
+const parentContainer = document.querySelector('.lists-container .container');
 
 // Retrieve settings from localStorage if available
 if (localStorage.getItem('movieSettings')) {
@@ -141,6 +143,8 @@ function hideLoadingScreen() {
 }
 
 function refreshMovies() {
+  listsIdx = 0;
+  document.querySelectorAll('.thumbnails-group').forEach(x => x.remove());
   getMovies().then(data => {
     processMovies(data.items);
     allMovies = data.items.reduce((obj, movie) => (obj[movie.Id] = movie, obj), {});
@@ -234,7 +238,8 @@ function filterList(movieIds) {
       (settings.filterYearMin && movie.ProductionYear < settings.filterYearMin) ||
       (settings.filterYearMax && movie.ProductionYear > settings.filterYearMax) ||
       (settings.filterCommunityRatingsMin && (movie.CommunityRating || 0) < settings.filterCommunityRatingsMin) ||
-      (settings.filterCriticRatingsMin && (movie.CriticRating || 0) < settings.filterCriticRatingsMin)
+      (settings.filterCriticRatingsMin && (movie.CriticRating || 0) < settings.filterCriticRatingsMin) ||
+      (settings.filterRuntimeMinutes && (movie.durationSeconds || 0) / 60 > settings.filterRuntimeMinutes)
     );
   });
 }
@@ -367,19 +372,23 @@ function populateMovies() {
   } else if (listsIdx == Math.min(... displayedIds) || (listsIdx == lists.length - 2 && displayedIds.length == 2)) {
     document.querySelector('.thumbnails-group:last-child').remove();
     const currentGroup = document.querySelector('.thumbnails-group');
-    const visibleGroup = document.querySelectorAll('.thumbnails-group')[1] || currentGroup;
-    currentGroup.style.marginTop = `calc(-${visibleGroup.offsetHeight}px - ${getComputedStyle(visibleGroup).marginBottom})`;
-    currentGroup.style.display = '';
-    setTimeout(() => currentGroup.style.marginTop = '0', 20);
+    if (currentGroup) {
+      const visibleGroup = document.querySelectorAll('.thumbnails-group')[1] || currentGroup;
+      currentGroup.style.marginTop = `calc(-${visibleGroup.offsetHeight}px - ${getComputedStyle(visibleGroup).marginBottom})`;
+      currentGroup.style.display = '';
+      setTimeout(() => currentGroup.style.marginTop = '0', 20);
+    }
     flag = true;
   }
   if (!flag || listsIdx == lists.length - 1) {
     const collapseGroup = document.querySelector('.thumbnails-group');
-    collapseGroup.style.marginTop = `calc(-${collapseGroup.offsetHeight}px - ${getComputedStyle(collapseGroup).marginBottom})`;
-    document.querySelectorAll('.thumbnails-group').forEach(x => x.style.display = '');
-    setTimeout(() => {
-      collapseGroup.remove();
-    }, 100);
+    if (collapseGroup) {
+      collapseGroup.style.marginTop = `calc(-${collapseGroup.offsetHeight}px - ${getComputedStyle(collapseGroup).marginBottom})`;
+      document.querySelectorAll('.thumbnails-group').forEach(x => x.style.display = '');
+      setTimeout(() => {
+        collapseGroup.remove();
+      }, 100);
+    }
   }
   const swiperEl = [... document.querySelectorAll('.thumbnails-group')].find(x => x.dataset.idx == listsIdx).querySelector('.swiper');
   activeSwiper = swiperEl.swiper;
@@ -483,6 +492,11 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+document.getElementById('nav-up').addEventListener('click', handleUpAction);
+document.getElementById('nav-down').addEventListener('click', handleDownAction);
+document.getElementById('nav-left').addEventListener('click', handleLeftAction);
+document.getElementById('nav-right').addEventListener('click', handleRightAction);
+
 const settingsButton = document.getElementById('settings-button');
 const overlay = document.getElementById('overlay');
 const settingsSaveButton = document.querySelector('.settings-save');
@@ -505,11 +519,13 @@ function saveSettings() {
 }
 
 function initializeSettings() {
+  document.getElementById('setting-show-nav').checked = settings.showNav;
   document.getElementById('filter-hide-played').checked = settings.filterHidePlayed;
   document.getElementById('filter-year-min').value = settings.filterYearMin;
   document.getElementById('filter-year-max').value = settings.filterYearMax;
   document.getElementById('filter-community-ratings-min').value = settings.filterCommunityRatingsMin;
   document.getElementById('filter-critic-ratings-min').value = settings.filterCriticRatingsMin;
+  document.getElementById('filter-runtime-minutes').value = settings.filterRuntimeMinutes;
   document.getElementById('setting-slider-limit').value = settings.moviesSliderLimit;
   document.getElementById('setting-font-size').value = settings.fontSize;
   document.getElementById('indicator-unplayed-filter').style.display = settings.filterHidePlayed ? '' : 'none';
@@ -535,16 +551,26 @@ function initializeSettings() {
   document.getElementById('indicator-community-rating-filter').textContent = settings.filterCommunityRatingsMin + '+';
   document.getElementById('indicator-critic-rating-filter').style.display = settings.filterCriticRatingsMin ? '' : 'none';
   document.getElementById('indicator-critic-rating-filter').textContent = settings.filterCriticRatingsMin + '+';
+  document.getElementById('indicator-runtime-minutes-filter').style.display = settings.filterRuntimeMinutes ? '' : 'none';
+  document.getElementById('indicator-runtime-minutes-filter').textContent = settings.filterRuntimeMinutes + 'm+';
   const hasFilters = [... document.querySelectorAll('.filter-indicators > span')].find(x => x.style.display != 'none');
   document.querySelector('.filter-indicators').style.display = hasFilters ? '' : 'none';
+  const navButtons = document.getElementById('nav-buttons');
+  if (settings.showNav) {
+    navButtons.style.display = 'block';
+  } else {
+    navButtons.style.display = 'none';
+  }
 }
 
 document.querySelector('.settings-save').addEventListener('click', function() {
+  settings.showNav = document.getElementById('setting-show-nav').checked;
   settings.filterHidePlayed = document.getElementById('filter-hide-played').checked;
   settings.filterYearMin = parseInt(document.getElementById('filter-year-min').value) || 1900;
   settings.filterYearMax = parseInt(document.getElementById('filter-year-max').value);
   settings.filterCommunityRatingsMin = parseFloat(document.getElementById('filter-community-ratings-min').value) || 0;
   settings.filterCriticRatingsMin = parseInt(document.getElementById('filter-critic-ratings-min').value) || 0;
+  settings.filterRuntimeMinutes = parseInt(document.getElementById('filter-runtime-minutes').value) || 0;
   settings.moviesSliderLimit = parseInt(document.getElementById('setting-slider-limit').value) || 60;
   settings.fontSize = parseInt(document.getElementById('setting-font-size').value) || 100;
   saveSettings();

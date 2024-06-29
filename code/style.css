@@ -267,13 +267,16 @@ body.login-body {
 }
 
 .lists-container {
-  overflow-x: auto;
   padding-top: 1vh;
   position: absolute;
   bottom: 0;
   z-index: 50;
   margin-bottom: -15%;
-  overflow-y: hidden;
+  overflow: visible;
+}
+
+.lists-container .container {
+  overflow: hidden;
 }
 
 .thumbnails-group {
@@ -458,6 +461,80 @@ body.login-body {
   height: 100%;
   background: rgb(0,0,0);
   background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4206057422969187) 15%, rgba(0,0,0,0) 28%);
+}
+
+#nav-buttons {
+  display: none;
+  position: absolute;
+  top: -60px;
+  right: 4vh;
+  width: 100px;
+  height: 100px;
+}
+
+#nav-buttons div {
+  width: 30px;
+  height: 30px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: white;
+  cursor: pointer;
+}
+
+#nav-up {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#nav-down {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#nav-left {
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#nav-right {
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#nav-up::before,
+#nav-down::before,
+#nav-left::before,
+#nav-right::before {
+  content: '';
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 5px;
+}
+
+#nav-up::before {
+  transform: rotate(-135deg);
+}
+
+#nav-down::before {
+  transform: rotate(45deg);
+}
+
+#nav-left::before {
+  transform: rotate(135deg);
+}
+
+#nav-right::before {
+  transform: rotate(-45deg);
 }
 
 @media screen and (width: 1920px) {

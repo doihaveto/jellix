@@ -21,6 +21,7 @@
     <span id="indicator-year-filter" title="Years" style="display: none;"></span>
     <span id="indicator-community-rating-filter" title="Community rating" style="display: none;"></span>
     <span id="indicator-critic-rating-filter" title="Critic rating" style="display: none;"></span>
+    <span id="indicator-runtime-minutes-filter" title="Runtime (minutes)" style="display: none;"></span>
   </div>
   <button type="button" id="settings-button"><span class="material-symbols-outlined" title="Settings">settings</span></button>
   <button type="button" id="logout-button"><span class="material-symbols-outlined" title="Logout">logout</span></button>
@@ -51,15 +52,25 @@
     </div>
 </div>
 
-<div class="lists-container"></div>
+<div class="lists-container">
+  <div id="nav-buttons">
+    <div id="nav-up"></div>
+    <div id="nav-down"></div>
+    <div id="nav-left"></div>
+    <div id="nav-right"></div>
+  </div>
+  <div class="container"></div>
+</div>
 
 <div class="overlay" id="overlay">
   <div class="settings" id="settings">
     <h3>Settings</h3>
+    <p>Show navigation buttons <input type="checkbox" id="setting-show-nav"></p>
     <p>Hide played movies <input type="checkbox" id="filter-hide-played"></p>
     <p>Year: <input type="number" id="filter-year-min"> - <input type="number" id="filter-year-max"></p>
     <p>Community ratings minimum: <input type="number" id="filter-community-ratings-min" min="0" max="9.9" step="0.1"></p>
     <p>Critic ratings minimum: <input type="number" id="filter-critic-ratings-min" min="0" max="100" step="1"></p>
+    <p>Runtime maximum (minutes): <input type="number" id="filter-runtime-minutes" min="0" step="1"></p>
     <p>Movies per row: <input type="number" id="setting-slider-limit" min="10" max="500" step="1"></p>
     <p>Font size (%): <input type="number" id="setting-font-size" min="1" max="1000" step="1"></p>
     <div class="settings-buttons">
