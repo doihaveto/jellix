@@ -1,4 +1,5 @@
 function shuffle(array, seed) {
+  seed = parseInt(seed);
   var m = array.length, t, i;
   while (m) {
     i = Math.floor(random(seed) * m--);

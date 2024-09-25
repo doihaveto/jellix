@@ -222,7 +222,24 @@ body.login-body {
   font-size: 4vw;
   font-weight: bold;
   line-height: 1;
-  margin-bottom: 2vh
+  margin-bottom: 2vh;
+  width: 40vw;
+}
+
+#youtube-player {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  right: 0;
+}
+
+.rtl .movie-title {
+  direction: rtl;
+  display:block !important;
+}
+
+.rtl .movie-info {
+  direction: rtl;
 }
 
 .community-rating, .critic-rating {
@@ -336,10 +353,10 @@ body.login-body {
   top: 2vh;
   right: 1vw;
   display: flex;
-  z-index: 100;
+  z-index: 110;
 }
 
-.header button, .filter-indicators {
+.header button, .filter-indicators, #trailer-control {
   align-items: center;
   justify-content: center;
   display: inline-flex;
@@ -352,7 +369,7 @@ body.login-body {
   margin-left: 1vh;
 }
 
-.header .filter-indicators {
+.header .filter-indicators, #trailer-control {
   cursor: auto;
   line-height: 1;
   background-color: #54000091;
@@ -367,6 +384,12 @@ body.login-body {
 
 .filter-indicators span {
   margin: 0 7px;
+}
+
+.header #trailer-control {
+  cursor: pointer;
+  margin-right: 10px;
+  background-color: #0f122187;
 }
 
 .overlay {
@@ -430,7 +453,11 @@ body.login-body {
   display: flex;
 }
 
-.background-container {
+#selected-movie-info {
+  z-index: 100;
+}
+
+#player-container, .background-container {
   position: absolute;
   width: 70%;
   height: 70%;
@@ -441,7 +468,7 @@ body.login-body {
   transition: background-image 0.2s ease-in-out;
 }
 
-.background-container::before {
+#player-container::before, .background-container::before {
   content: '';
   position: absolute;
   top: 0;
@@ -450,9 +477,10 @@ body.login-body {
   height: 100%;
   background: rgb(0,0,0);
   background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4206057422969187) 15%, rgba(0,0,0,0) 28%);
+  z-index: 10;
 }
 
-.background-container::after {
+#player-container::after, .background-container::after {
   content: '';
   position: absolute;
   top: 0;
@@ -461,6 +489,16 @@ body.login-body {
   height: 100%;
   background: rgb(0,0,0);
   background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4206057422969187) 15%, rgba(0,0,0,0) 28%);
+  z-index: 10;
+}
+
+body #player-container {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;;
+}
+
+#player-container.visible {
+  opacity: 1;
 }
 
 #nav-buttons {
@@ -535,6 +573,10 @@ body.login-body {
 
 #nav-right::before {
   transform: rotate(-45deg);
+}
+
+#setting-translations-container {
+  display: none;
 }
 
 @media screen and (width: 1920px) {

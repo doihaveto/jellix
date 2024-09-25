@@ -1,20 +1,22 @@
-# Use a Python base image
-FROM python:3.11-alpine
+# Use the official NGINX image as the base image
+FROM nginx:alpine
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy your project files into the container
 COPY code /app
 
+# Remove the default NGINX HTML directory and create a symbolic link
+RUN rm -rf /usr/share/nginx/html && ln -s /app /usr/share/nginx/html
+
 # Copy the entrypoint script into the container
-COPY entrypoint.sh /app/entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 
 # Set execute permissions for the entrypoint script
-RUN chmod +x /app/entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Expose the port your app runs on
-EXPOSE 3000
+# Expose the port NGINX will use
+EXPOSE 80
 
-# Define the entrypoint
-ENTRYPOINT ["/app/entrypoint.sh"]
+# Define the entrypoint script
+ENTRYPOINT ["/entrypoint.sh"]

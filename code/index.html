@@ -10,12 +10,15 @@
 <body>
 
 <div class="background-container"></div>
-
+<div id="player-container">
+  <div id="youtube-player"></div>
+</div>
 <div class="loading-screen">
   <div><span class="jelli">Jelli</span><span class="x"></span></div>
 </div>
 
 <div class="header">
+  <div id="trailer-control" style="display: none;"></div>
   <div class="filter-indicators" style="display: none;">
     <span id="indicator-unplayed-filter" style="display: none;"><span class="material-symbols-outlined" title="Hide played movies">visibility_off</span></span>
     <span id="indicator-year-filter" title="Years" style="display: none;"></span>
@@ -65,13 +68,14 @@
 <div class="overlay" id="overlay">
   <div class="settings" id="settings">
     <h3>Settings</h3>
+    <p id="setting-translations-container">Language: <select id="setting-translations"><option value="" selected>English</option></select></p>
+    <p>Play trailer after <input type="number" id="setting-trailer-timer" min="0" max="100" step="0.1"> seconds (leave empty to disable)</p>
     <p>Show navigation buttons <input type="checkbox" id="setting-show-nav"></p>
     <p>Hide played movies <input type="checkbox" id="filter-hide-played"></p>
     <p>Year: <input type="number" id="filter-year-min"> - <input type="number" id="filter-year-max"></p>
     <p>Community ratings minimum: <input type="number" id="filter-community-ratings-min" min="0" max="9.9" step="0.1"></p>
     <p>Critic ratings minimum: <input type="number" id="filter-critic-ratings-min" min="0" max="100" step="1"></p>
     <p>Runtime maximum (minutes): <input type="number" id="filter-runtime-minutes" min="0" step="1"></p>
-    <p>Movies per row: <input type="number" id="setting-slider-limit" min="10" max="500" step="1"></p>
     <p>Font size (%): <input type="number" id="setting-font-size" min="1" max="1000" step="1"></p>
     <div class="settings-buttons">
       <button type="button" class="settings-save"><span class="material-symbols-outlined" title="Save">done</span></button>
@@ -83,6 +87,7 @@
 <script src="/params.js"></script>
 <script src="/auth.js"></script>
 <script src="/utils.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
 <script src="/main.js"></script>
 </body>
 </html>
