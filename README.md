@@ -11,14 +11,15 @@ Features:
   - Maximum runtime
   - Hide played movies
 - Categories:
-  - Today's picks (random movies, consistent across the day).
+  - Today's picks (random movies/series, consistent across the day).
   - Latest movies
   - Newest movies
   - Favourites
   - Each available genre
-- Plays movie trailers automatically (can be disabled in the settings menu).
+- Search (also searches tags; example: "true story" will find movies/series likely inspired by a true story)
+- Plays trailers automatically (can be disabled in the settings menu).
 
-![Screenshot](https://i.imgur.com/wwueVA6.png)
+![Screenshot](https://i.imgur.com/zJHzf2z.jpeg)
 
 ## Installation
 You can either use docker, or manually run it.
