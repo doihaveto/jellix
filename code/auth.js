@@ -1,47 +1,44 @@
-const tokenKey = 'accessToken';
-const device = 'Device';
-const client = 'Jellix';
-const client_version = '0.0.1';
-var device_id = localStorage.getItem('deviceId');
+export const tokenKey = 'accessToken';
+export const device = 'Device';
+export const client = 'Jellix';
+export const client_version = '0.0.1';
 
 function generateRandomString(length) {
   return [...Array(length)].map(() => Math.random().toString(36)[2]).join('');
 }
 
-// Generate device ID
+export let device_id = localStorage.getItem('deviceId');
+
 if (!device_id) {
   device_id = generateRandomString(16);
   localStorage.setItem('deviceId', device_id);
 }
 
-// Check if user is already logged in
-const accessToken = localStorage.getItem(tokenKey);
+export const accessToken = localStorage.getItem(tokenKey);
 
-function verifyToken(token, onSuccess, onError) {
+export function getAuthHeader(token = null) {
+  let header = `MediaBrowser Client="${client}", Device="${device}", DeviceId="${device_id}", Version="${client_version}"`;
+  if (token) header += `, Token="${token}"`;
+  return header;
+}
+
+export function verifyToken(token, onSuccess, onError) {
   fetch(`${API_URL}Users/Me`, {
     method: 'GET',
-    headers: {
-      'Authorization': `MediaBrowser Client="${client}", Device="${device}", DeviceId="${device_id}", Version="${client_version}", Token="${token}"`
-    }
+    headers: { 'Authorization': getAuthHeader(token) },
   })
   .then(response => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      throw new Error('Token verification failed');
-    }
+    if (response.ok) return response.json();
+    throw new Error('Token verification failed');
   })
-  .then(data => {
-    onSuccess(data); // Call success callback
-  })
+  .then(data => onSuccess(data))
   .catch(error => {
-    localStorage.removeItem(tokenKey); // Remove invalid token
-    onError(error.message); // Call error callback
+    localStorage.removeItem(tokenKey);
+    onError(error.message);
   });
 }
 
-// Function to reset token and redirect to login page
-function logout() {
+export function logout() {
   localStorage.removeItem(tokenKey);
   window.location.href = '/login.html';
 }

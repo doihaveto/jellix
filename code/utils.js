@@ -1,37 +1,38 @@
-function shuffle(array, seed) {
+export function shuffle(array, seed) {
+  const copy = [...array];
   seed = parseInt(seed);
-  var m = array.length, t, i;
+  let m = copy.length, t, i;
   while (m) {
     i = Math.floor(random(seed) * m--);
-    t = array[m];
-    array[m] = array[i];
-    array[i] = t;
+    t = copy[m];
+    copy[m] = copy[i];
+    copy[i] = t;
     ++seed;
   }
-  return array;
+  return copy;
 }
 
 function random(seed) {
-  var x = Math.sin(seed++) * 10000; 
+  const x = Math.sin(seed++) * 10000;
   return x - Math.floor(x);
 }
 
-function ticksToSeconds(ticks) {
+export function ticksToSeconds(ticks) {
   const ticksPerSecond = 10000000; // 10 million ticks per second
   return ticks / ticksPerSecond;
 }
 
-function formatDuration(seconds) {
+export function formatDuration(seconds) {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   return `${hours}h ${minutes}m`;
 }
 
-function sortArrayByAppearance(sortedArr, jumbledArr) {
+export function sortArrayByAppearance(sortedArr, jumbledArr) {
   return jumbledArr.slice().sort((a, b) => {
     const aIndex = sortedArr.indexOf(a);
     const bIndex = sortedArr.indexOf(b);
-  
+
     if (aIndex === -1 && bIndex === -1) {
       return a.localeCompare(b);
     } else if (aIndex === -1) {
@@ -39,7 +40,7 @@ function sortArrayByAppearance(sortedArr, jumbledArr) {
     } else if (bIndex === -1) {
       return -1;
     }
-  
+
     return aIndex - bIndex;
   });
 }

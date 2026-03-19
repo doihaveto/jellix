@@ -4,37 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jellix</title>
+  <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="/style.css">
 </head>
 <body class="login-body">
-  <form id="login-form">
+  <div class="login-card">
     <div class="logo-container"><span class="jelli">Jelli</span><span class="x"></span></div>
-    <div id="auth-by-credentials">
-      <p>
-        <label for="username">Username:</label> <input type="text" id="username" name="username" required>
-      </p>
-      <p>
-        <label for="password">Password:</label> <input type="password" id="password" name="password" required>
-      </p>
-    </div>
-    <div id="auth-by-quickcode">
-      <p>
-        <label for="username">Quick Connect code:</label> <input type="text" id="quickcode" name="quickcode" readonly>
-        <input type="hidden" id="quickcode_status" value="0">
-        <input type="hidden" id="quickcode_secret" name="quickcode_secret" value="">
-      </p>
-    </div>
-    <div id="login-selector-form-buttons">
-      <input id="username-method" type="radio" name="login_method" value="username" onchange="changeAuthenticationMethod(this.value);" checked> <label for="username-method">Default</label>
-      <input id="quickcode-method" type="radio" name="login_method" value="quickcode" onchange="changeAuthenticationMethod(this.value);"> <label for="quickcode-method">Quick Connect</label>
-    </div>
-    <div id="login-form-buttons">
-      <button type="submit">Login</button>
-    </div>
-    <div id="error"></div> <!-- Error message display -->
-  </form>
+
+    <form id="login-form">
+      <div class="login-tabs" id="login-selector-form-buttons">
+        <label class="login-tab login-tab-active">
+          <input id="username-method" type="radio" name="login_method" value="username" checked>
+          <span>Sign In</span>
+        </label>
+        <label class="login-tab">
+          <input id="quickcode-method" type="radio" name="login_method" value="quickcode">
+          <span>Quick Connect</span>
+        </label>
+      </div>
+
+      <div id="auth-by-credentials">
+        <div class="login-field">
+          <input type="text" id="username" name="username" required placeholder=" ">
+          <label for="username">Username</label>
+        </div>
+        <div class="login-field">
+          <input type="password" id="password" name="password" required placeholder=" ">
+          <label for="password">Password</label>
+        </div>
+      </div>
+
+      <div id="auth-by-quickcode">
+        <div class="login-field">
+          <input type="text" id="quickcode" name="quickcode" readonly placeholder=" ">
+          <label for="quickcode">Quick Connect Code</label>
+          <input type="hidden" id="quickcode_status" value="0">
+          <input type="hidden" id="quickcode_secret" name="quickcode_secret" value="">
+        </div>
+      </div>
+
+      <div id="login-form-buttons">
+        <button type="submit">Sign In</button>
+      </div>
+
+      <div id="error" role="alert"></div>
+    </form>
+  </div>
+
   <script src="/params.js"></script>
-  <script src="/auth.js"></script>
-  <script src="/login.js"></script>
+  <script type="module" src="/login.js"></script>
 </body>
 </html>

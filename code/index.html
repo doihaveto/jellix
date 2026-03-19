@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jellix</title>
+  <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/swiper/swiper-bundle.min.css"/>
 </head>
@@ -26,17 +27,20 @@
     <span id="indicator-critic-rating-filter" title="Critic rating" style="display: none;"></span>
     <span id="indicator-runtime-minutes-filter" title="Runtime (minutes)" style="display: none;"></span>
   </div>
-  <button type="button" id="settings-button"><span class="material-symbols-outlined" title="Settings">settings</span></button>
-  <button type="button" id="logout-button"><span class="material-symbols-outlined" title="Logout">logout</span></button>
+  <div class="search-container">
+    <input type="text" id="search-input" placeholder="Search movies..." aria-label="Search movies" autocomplete="off">
+    <button type="button" id="search-button" aria-label="Search movies"><span class="material-symbols-outlined" title="Search">search</span></button>
+  </div>
+  <button type="button" id="content-toggle" aria-label="Switch to TV series" style="display: none;"><span class="material-symbols-outlined" title="Switch to TV series">live_tv</span></button>
+  <button type="button" id="settings-button" aria-label="Settings"><span class="material-symbols-outlined" title="Settings">settings</span></button>
+  <button type="button" id="logout-button" aria-label="Logout"><span class="material-symbols-outlined" title="Logout">logout</span></button>
 </div>
 
-<div class="errors"></div>
+<div class="errors" role="alert"></div>
 <div class="feature" id="selected-movie-info">
-    <!-- Placeholders for the selected movie's backdrop and logo -->
     <div class="feature-content">
-        <img src="" class="feature-movie-logo">
+        <img src="" alt="" class="feature-movie-logo">
         <div class="movie-details">
-            <!-- Placeholder elements for feature movie description -->
             <div class="movie-title"></div>
             <div class="movie-info">
                 <div class="additional-info">
@@ -44,50 +48,104 @@
                     <span class="info genres"></span>
                     <span class="info duration"></span>
                     <span class="community-rating"></span>
-                    <span class="critic-rating">29</span>
+                    <span class="critic-rating"></span>
+                </div>
+                <div class="movie-credits-lines">
+                    <div class="movie-director"></div>
+                    <div class="movie-writer"></div>
                 </div>
                 <div class="movie-overview"></div>
             </div>
             <div>
-              <a href="" target="_blank" class="play-button"><span></span> Play</a>
+              <a href="" target="_blank" class="play-button" aria-label="Play movie"><span></span> Play</a>
             </div>
         </div>
     </div>
 </div>
-
+<div class="feature-cast">
+  <div class="movie-cast"></div>
+</div>
 <div class="lists-container">
-  <div id="nav-buttons">
-    <div id="nav-up"></div>
-    <div id="nav-down"></div>
-    <div id="nav-left"></div>
-    <div id="nav-right"></div>
+  <div id="nav-buttons" role="navigation" aria-label="Movie navigation">
+    <div id="nav-up" role="button" aria-label="Navigate up" tabindex="0"></div>
+    <div id="nav-down" role="button" aria-label="Navigate down" tabindex="0"></div>
+    <div id="nav-left" role="button" aria-label="Navigate left" tabindex="0"></div>
+    <div id="nav-right" role="button" aria-label="Navigate right" tabindex="0"></div>
   </div>
   <div class="container"></div>
 </div>
 
-<div class="overlay" id="overlay">
+<div class="overlay" id="overlay" role="dialog" aria-label="Settings">
   <div class="settings" id="settings">
-    <h3>Settings</h3>
-    <p id="setting-translations-container">Language: <select id="setting-translations"><option value="" selected>English</option></select></p>
-    <p>Play trailer after <input type="number" id="setting-trailer-timer" min="0" max="100" step="0.1"> seconds (leave empty to disable)</p>
-    <p>Show navigation buttons <input type="checkbox" id="setting-show-nav"></p>
-    <p>Hide played movies <input type="checkbox" id="filter-hide-played"></p>
-    <p>Year: <input type="number" id="filter-year-min"> - <input type="number" id="filter-year-max"></p>
-    <p>Community ratings minimum: <input type="number" id="filter-community-ratings-min" min="0" max="9.9" step="0.1"></p>
-    <p>Critic ratings minimum: <input type="number" id="filter-critic-ratings-min" min="0" max="100" step="1"></p>
-    <p>Runtime maximum (minutes): <input type="number" id="filter-runtime-minutes" min="0" step="1"></p>
-    <p>Font size (%): <input type="number" id="setting-font-size" min="1" max="1000" step="1"></p>
-    <div class="settings-buttons">
-      <button type="button" class="settings-save"><span class="material-symbols-outlined" title="Save">done</span></button>
+    <div class="settings-header">
+      <h3>Settings</h3>
+      <button type="button" class="settings-close" aria-label="Close settings"><span class="material-symbols-outlined">close</span></button>
+    </div>
+
+    <div class="settings-section" id="setting-translations-container">
+      <div class="settings-section-title">Language</div>
+      <div class="settings-row">
+        <select id="setting-translations"><option value="" selected>English</option></select>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">Playback</div>
+      <div class="settings-row">
+        <label for="setting-trailer-timer">Trailer delay (seconds)</label>
+        <input type="number" id="setting-trailer-timer" min="0" max="100" step="0.1" placeholder="Off">
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">Display</div>
+      <div class="settings-row">
+        <label for="setting-show-nav">Navigation buttons</label>
+        <label class="toggle"><input type="checkbox" id="setting-show-nav"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="settings-row">
+        <label for="setting-font-size">Font size (%)</label>
+        <input type="number" id="setting-font-size" min="1" max="1000" step="1">
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">Filters</div>
+      <div class="settings-row">
+        <label for="filter-hide-played">Hide played</label>
+        <label class="toggle"><input type="checkbox" id="filter-hide-played"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="settings-row">
+        <label>Year range</label>
+        <div class="settings-range">
+          <input type="number" id="filter-year-min" placeholder="Min">
+          <span class="settings-range-sep">&ndash;</span>
+          <input type="number" id="filter-year-max" placeholder="Max">
+        </div>
+      </div>
+      <div class="settings-row">
+        <label for="filter-community-ratings-min">Min community rating</label>
+        <input type="number" id="filter-community-ratings-min" min="0" max="9.9" step="0.1" placeholder="0">
+      </div>
+      <div class="settings-row">
+        <label for="filter-critic-ratings-min">Min critic rating</label>
+        <input type="number" id="filter-critic-ratings-min" min="0" max="100" step="1" placeholder="0">
+      </div>
+      <div class="settings-row">
+        <label for="filter-runtime-minutes">Max runtime (min)</label>
+        <input type="number" id="filter-runtime-minutes" min="0" step="1" placeholder="Any">
+      </div>
+    </div>
+
+    <div class="settings-actions">
+      <button type="button" class="settings-save" aria-label="Save settings">Save</button>
     </div>
   </div>
 </div>
 
 <script src="/swiper/swiper-bundle.min.js"></script>
 <script src="/params.js"></script>
-<script src="/auth.js"></script>
-<script src="/utils.js"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
-<script src="/main.js"></script>
+<script type="module" src="/main.js"></script>
 </body>
 </html>
